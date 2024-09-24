@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <link rel="stylesheet" href="../Content/css/style.css">
+    <meta name="viewport" content="width=device-width" />
+    <title>TRANG ĐỔI MẬT KHẨU</title>
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">ĐỔI MẬT KHẨU</h4>
+                                    <form action="" method="post" id="frm_data">
+                                        <div class="form-group">
+                                            <label><strong>Tài khoản</strong></label>
+                                            <input type="text" class="form-control" name="txt_tk" id="txt_tk" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Mật khẩu cũ</strong></label>
+                                            <input type="password" class="form-control" name="txt_mk" id="txt_mk" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Mật khẩu mới</strong></label>
+                                            <input type="password" class="form-control" name="txt_mkmoi" id="txt_mkmoi" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Xác nhận mật khẩu mới</strong></label>
+                                            <input type="password" class="form-control" name="txt_nhaclaimk" id="txt_nhaclaimk" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary btn-block" id="btn_doimatkhau">Xác nhận</button>
+
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#btn_doimatkhau").click(function () {
+
+            //kỹ thuật validate input requiment phía view
+            var input_require = $(".require");
+            var is_require_all = true;
+            for (i = 0; i < input_require.length; i++) {
+                if (!$(input_require[i]).val()) {
+                    is_require_all = false;
+                }
+            }
+
+            if (is_require_all) {
+                //trường hợp không rỗng
+
+
+                var form = $('#frm_data')[0];
+                var formData = new FormData(form);
+
+                //console.log(window.location.origin + '/QuanLiTaiKhoan/Edit');
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        //data: {id: $("#hosothisinh_id").html()},
+                        data: formData,
+                        //data: JSON.stringify(lst),
+                        contentType: "application/json; charset=utf-8",
+                        url: window.location.origin + '/TaiKhoan/DoiMatKhau_action',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (response) {
+                            var rs = JSON.parse(response);
+                            //alert(response);
+                            if (rs.ErrCode == 1) {
+                                // Chuyển hướng nếu thành công
+                                alert("Đổi mật khẩu thành công");
+                                window.location.href = '/TaiKhoan/DangNhap';
+                            }
+                            else {
+                                // Hiển thị thông báo lỗi nếu thất bại
+                                alert(rs.ErrDesc);
+                            }
+                        },
+                        error: function (response) {
+                            alert("Xử lý đổi mật khẩu thất bại");
+                        }
+                    }
+                );
+            }
+            else {
+                //trường hợp mssv rỗng
+                alert("Vui lòng điền vào các trường dữ liệu bắt buộc");
+            }
+        })
+    })
+
+    </script>
+</body>
+</html>

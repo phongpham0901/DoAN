@@ -1,0 +1,117 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>TRANG ĐĂNG NHẬP HỆ THỐNG</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="../Content/images/favicon.png">
+    <link href="../Content/css/style.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">ĐĂNG NHẬP</h4>
+                                    <form action="" method="post" id="frm_data">
+                                        <div class="form-group">
+                                            <label><strong>Tài khoản</strong></label>
+                                            <input type="text" class="form-control" name="txt_tk" id="txt_tk" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Mật khẩu</strong></label>
+                                            <input type="password" class="form-control" name="txt_mk" id="txt_mk" />
+                                        </div>
+                                        <div class="form-row d-flex justify-content-between mt-4 mb-2">
+                                            <div class="form-group">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <a href="#" id="link_doimatkhau">Đổi mật khẩu</a>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-primary btn-block" id="btn_dangnhap">Đăng nhập</button>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#btn_dangnhap").click(function () {
+                //trường hợp không rỗng
+                var form = $('#frm_data')[0];
+                var formData = new FormData(form);
+                //console.log(window.location.origin + '/QLSV/Add');
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        //data: {id: $("#hosothisinh_id").html()},
+                        data: formData,
+                        //data: JSON.stringify(lst),
+                        contentType: "application/json; charset=utf-8",
+                        url: window.location.origin + '/TaiKhoan/DangNhap_action',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (response) {
+                            var rs = JSON.parse(response);
+
+                            if (rs.ErrCode === 1) {
+                                var user = rs.Data;
+                                console.log(user.QuyenTC);
+                                if (user.QuyenTC === 'Admin') {
+                                    // Chuyển hướng đến trang admin
+                                    window.location.href = '/Home/Index';
+                                } else if (user.QuyenTC === 'Nhân Viên') {
+                                    // Chuyển hướng đến trang người dùng thông thường
+                                    window.location.href = '/Home/Index2';
+                                } else {
+                                    // Xử lý quyền không hợp lệ
+                                    alert('Quyền không hợp lệ!');
+                                }
+                            } else {
+                                alert(rs.ErrDesc);
+                            }
+                        },
+
+                        error: function (response) {
+                            alert("Xử lý thêm mới thất bại");
+                        }
+                    }
+                );
+            })
+        })
+
+        // Xử lý sự kiện click vào nút "Đổi mật khẩu"
+        $("#link_doimatkhau").click(function () {
+            // Chuyển hướng đến trang thay đổi mật khẩu khi click
+            window.location.href = '/TaiKhoan/DoiMatKhau'; // Thay đổi đường dẫn đến trang đổi mật khẩu của bạn
+        });
+    </script>
+</body>
+</html>

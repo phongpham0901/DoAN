@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="QLNhanVien" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.NhanVien" Member="NhanViens">
+    <Type Name="NhanVien">
+      <Column Name="MaNV" Type="System.String" DbType="NChar(20) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="HoTenNV" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Ngaysinh" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Gioitinh" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="Diachi" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="SDT" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="MaCV" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="isDelete" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="DeleteTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="NhanVien_QLChamCong" Member="QLChamCongs" ThisKey="MaNV" OtherKey="MaNV" Type="QLChamCong" />
+      <Association Name="NhanVien_QLLuong" Member="QLLuongs" ThisKey="MaNV" OtherKey="MaNV" Type="QLLuong" />
+      <Association Name="ChucVu_NhanVien" Member="ChucVu" ThisKey="MaCV" OtherKey="MaCV" Type="ChucVu" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.QLChamCong" Member="QLChamCongs">
+    <Type Name="QLChamCong">
+      <Column Name="MaCC" Type="System.String" DbType="NChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SBChamCong" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="MaNV" Type="System.String" DbType="NChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="ThangCC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NamCC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="NhanVien_QLChamCong" Member="NhanVien" ThisKey="MaNV" OtherKey="MaNV" Type="NhanVien" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ChucVu" Member="ChucVus">
+    <Type Name="ChucVu">
+      <Column Name="MaCV" Type="System.String" DbType="NChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TenCV" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="isDelete" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DeleteTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="ChucVu_NhanVien" Member="NhanViens" ThisKey="MaCV" OtherKey="MaCV" Type="NhanVien" />
+    </Type>
+  </Table>
+  <Table Name="dbo.QLLuong" Member="QLLuongs">
+    <Type Name="QLLuong">
+      <Column Name="MaL" Type="System.String" DbType="NChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LuongMB" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaNV" Type="System.String" DbType="NChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Luongquy" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="NhanVien_QLLuong" Member="NhanVien" ThisKey="MaNV" OtherKey="MaNV" Type="NhanVien" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Taikhoan" Member="Taikhoans">
+    <Type Name="Taikhoan">
+      <Column Name="TenTK" Type="System.String" DbType="NChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="[User]" Member="User" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="QuyenTC" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="isDetele" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DeleteTime" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

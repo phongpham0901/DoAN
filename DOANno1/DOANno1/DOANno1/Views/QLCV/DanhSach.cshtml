@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "DanhSach";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Quản lý danh sách chức vụ nhân viên</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="#">Tran</a></li>*@
+                    @*<li class="breadcrumb-item active">Trang chủ</li>*@
+                    <li class="breadcrumb-item"><a href="#">Quản lý thông tin chức vụ nhân viên</a></li>
+                    <li class="breadcrumb-item active">Danh sách chức vụ nhân viên</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<!-- Add this code above the table -->
+
+<section class="content">
+    <div class="container-fluid">
+
+        @*<form action="url_server" method="post" id="frm_data">
+                <input name="txt_MaNV" id="txt_id" />
+                <div id="div_noft"></div>
+                <button type="button" id="btn_sua" class="btn btn-primary">Tìm kiếm</button>
+                <button type="reset" class="btn btn-outline-danger">Xóa</button>
+            </form>*@
+
+        <!-- ... Your existing code ... -->
+
+        <form action="url_server" method="post" id="frm_data">
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="txt_MaCV">Mã Chức vụ</label>
+                    <input type="text" class="form-control" id="txt_MaCV" name="MaCV">
+                </div>
+            </div>
+            <div id="div_noft" class="mb-3"></div>
+            <button type="button" id="btn_timkiem" class="btn btn-primary">Tìm kiếm</button>
+            <button type="reset" class="btn btn-outline-danger">Xóa</button>
+        </form>
+
+        <!-- ... Your existing code ... -->
+
+
+
+
+        <div id="div_test"> </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách chức vụ nhân viên</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-border-grey">
+                            <thead>
+                                <tr class="bg-primary ">
+                                    <th style="width: 10px">#</th>
+                                    <th>Mã Chức vụ</th>
+                                    <th>Tên Chức vụ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_data">
+                                <!-- Content will be dynamically populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    @*<div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>*@
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+
+<script>
+    //Hiện danh sách nhân viên
+    $(document).ready(function () {
+        $.ajax(
+            {
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: window.location.origin + '/QLCV/get_All',
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (response) {
+                    var rs = JSON.parse(response);
+                    console.log(rs);
+                    if (rs.ErrCode == 1) {
+                        var str = "";
+                        for (var i = 0; i < rs.Data.length; i++) {
+                            str += "<tr> <td> " + (i + 1) + "</td> <td> " +
+                                rs.Data[i].MaCV + " </td><td>" +
+                                rs.Data[i].TenCV + "</td></tr>";
+                        }
+
+                        $("#tbl_data").html(str);
+                    }
+                    else {
+                        alert(rs.ErrDesc);
+                    }
+                },
+                error: function (response) {
+                    alert("Lấy DSCV thất bại");
+                }
+            }
+        );
+    })
+
+    //Tìm kiếm
+
+    $(document).ready(function () {
+        $("#btn_timkiem").click(function () {
+            // Get the value of "MaCV" from the input field
+            var id = $("#txt_MaCV").val();
+
+            // Check if the value is not empty
+            if (id) {
+                // Send the request to the server
+                $.ajax({
+                    type: "POST",
+                    data: { MaCV: id }, // Send data as an object
+                    url: window.location.origin + '/QLCV/get_CV_Info',
+                    success: function (response) {
+                        console.log(response); // Log the response to the console
+
+                        if (response.indexOf("Không tìm thấy mã chức vụ") >= 0 || response.indexOf("thất bại") >= 0) {
+                            // Handle error case
+                            $("#div_noft").html(response);
+                        } else {
+                            // Parse the JSON response
+                            var CV = JSON.parse(response);
+
+                            // Build the HTML to display employee details
+                            var html = "<strong>Mã Chức vụ:</strong> " + CV.MaCV + "<br/>" +
+                                "<strong>Tên Chức vụ:</strong> " + CV.TenCV;
+
+                            // Update the content of the div
+                            $("#div_noft").html(html);
+                        }
+                    },
+                    error: function (response) {
+                        console.error(response); // Log the error to the console
+                        alert("Xử lý lấy thông tin chức vụ cần sửa thất bại");
+                    }
+                });
+            } else {
+                // Handle the case where "MaCV" is empty
+                $("#div_noft").html("Vui lòng nhập Mã Chức vụ");
+            }
+        });
+    });
+
+
+</script>
+

@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "ThemCV";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Example using CDN -->
+
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thêm thông tin chức vụ</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="#">Tran</a></li>*@
+                    @*<li class="breadcrumb-item active">Trang chủ</li>*@
+                    <li class="breadcrumb-item"><a href="#">Thêm thông tin chức vụ</a></li>
+                    <li class="breadcrumb-item active">Thêm chức vụ</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Thêm mới chức vụ</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form action="url_server" method="post" id="frm_data">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label for="txt_mssv">Mã số CV <span class="requiment">*</span></label>
+                                        <input type="text" class="form-control require" id="txt_mcv" name="txt_mcv" placeholder="Mã số CV">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-8 col-lg-9">
+                                    <div class="form-group">
+                                        <label for="txt_tencv">Tên chức vụ <span class="requiment">*</span></label>
+                                        <input type="text" class="form-control require" id="txt_tencv" name="txt_tencv" placeholder="tên CV">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <div id="div_noft"></div>
+                            <button type="button" class="btn btn-primary" id="btn_them">Thêm</button>
+                            <button type="reset" class="btn btn-outline-danger">Xóa</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+
+            </div>
+            <!--/.col (left) -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+    $(document).ready(function () {
+        $("#btn_them").click(function () {
+
+            //kỹ thuật validate input requiment phía view
+            var input_require = $(".require");
+            var is_require_all = true;
+            for (i = 0; i < input_require.length; i++) {
+                if (!$(input_require[i]).val()) {
+                    is_require_all = false;
+                }
+            }
+
+            if (is_require_all) {
+                //trường hợp không rỗng
+                var form = $('#frm_data')[0];
+                var formData = new FormData(form);
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        data: formData,
+                        contentType: "application/json; charset=utf-8",
+                        url: window.location.origin + '/QLCV/AddCV',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (response) {
+                            //alert(response);
+                            $("#div_noft").html(response);
+                        },
+                        error: function (response) {
+                            alert("Xử lý thêm mới thất bại");
+                        }
+                    }
+                );
+            }
+            else {
+                alert("Vui lòng điền vào các trường dữ liệu bắt buộc");
+            }
+        })
+    })
+</script>
+

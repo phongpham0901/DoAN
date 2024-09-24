@@ -1,0 +1,362 @@
+﻿@{
+    ViewBag.Title = "AddNV";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--<!-- Required vendors -->
+<!--<script src="../Content/vendor/global/global.min.js"></script>
+<script src="../Scripts/js/quixnav-init.js"></script>
+<script src="../Scripts/js/custom.min.js"></script>-->
+<!-- Vectormap -->
+<!--<script src="../Content/vendor/raphael/raphael.min.js"></script>
+<script src="../Content/vendor/morris/morris.min.js"></script>
+
+
+<script src="../Content/vendor/circle-progress/circle-progress.min.js"></script>
+<script src="../Content/vendor/chart.js/Chart.bundle.min.js"></script>
+<script src="../Content/vendor/gaugeJS/dist/gauge.min.js"></script>-->
+<!--  flot-chart js -->
+<!--<script src="../Content/vendor/flot/jquery.flot.js"></script>
+<script src="../Content/vendor/flot/jquery.flot.resize.js"></script>-->
+<!-- Owl Carousel -->
+<!--<script src="../Content/vendor/owl-carousel/js/owl.carousel.min.js"></script>-->
+<!-- Counter Up -->
+<!--<script src="../Content/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+<script src="../Content/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+<script src="../Content/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+<script src="../Scripts/js/dashboard/dashboard-1.js"></script>
+<script src="../Scripts/js/dashboard/dashboard-1.js"></script>-->
+@*<script src="../Content/Site.css" rel="stylesheet"></script>*@
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Xin chào!</h4>
+                <p class="mb-1">Quản lý thông tin nhân viên</p>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Quản lý thông tin nhân viên</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Sửa thông tin nhân viên</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Sửa thông tin nhân viên</h4>
+                </div>
+                @*<div id="div_search" class="row" style="margin: 20px 0 20px 0">
+                    <div class="col-sm-4 col-md-5 right">
+                        <input name="txt_search_val" id="txt_search_val" class="form-control" type="text" placeholder="Nhập giá trị tìm kiếm" />
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <select id="slc_search_type" class="form-control">
+                            <option value="">Chọn tiêu chí tìm kiếm</option>
+                            <option value="MaNV">Mã Nhân Viên</option>
+                            <option value="Email">Email</option>
+                            <option value="SDT">Số điện thoại</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 col-md-1 left"><button id="btn_search_action" class="btn btn-primary"><i class="fa fa-search"></i></button></div>
+                </div>*@
+                <form method="post" id="form_data">
+                    <input type="hidden" name="txt-id" id="txt-id" />
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-username">
+                                            Họ và tên
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control require" id="val-username" name="val-username" placeholder="Nguyễn Công Mạnh" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-email">
+                                            Email <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control require" id="val-email" name="val-email" placeholder="abc@gmail.com" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-phone">
+                                            Số điện thoại
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control require" id="val-phone" name="val-phone" placeholder="212-999-0000" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-address">
+                                            Địa chỉ
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control require" id="val-address" name="val-address" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-birthday">
+                                            Ngày Sinh
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="date" name="val-birthday" class="form-control require" id="val-birthday" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-gender">
+                                            Giới tính
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <select class="form-control require" id="val-gender" name="val-gender" required>
+                                                <option value="">Lựa chọn</option>
+                                                <option value="Nam">Nam</option>
+                                                <option value="Nữ">Nữ</option>
+                                                <option value="Khác">Khác</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-chucvu">
+                                            Chức vụ
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <select class="form-control require" id="val-chucvu" name="val-chucvu" required>
+                                                <option value="">Lựa chọn</option>
+                                                <option value="QL">Quản lý</option>
+                                                <option value="NV">Nhân viên</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-idnv">
+                                            Mã nhân viên
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input readonly type="text" class="form-control require" id="val-idnv" name="val-idnv" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12">
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 ml-auto text-center">
+                                            @*<div id="div_noft" style="color:red"></div>*@
+                                            <button type="submit" class="btn btn-primary" id="btn_sua">Update</button>
+                                            <button type="reset" class="btn btn-primary">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var url = new URL(window.location.href);
+        //console.log(url);
+        var id = url.searchParams.get("manv");
+        console.log(id);
+        //trường hợp không rỗng
+        var formData = new FormData();
+        formData.append("manv", id);
+
+        $.ajax(
+            {
+                type: "POST",
+                data: formData,
+                contentType: "application/json; charset=utf-8",
+                url: window.location.origin + '/TTNV/get_NV_Info',
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (response) {
+                    if (response.indexOf("Không tìm thấy") >= 0 || response.indexOf("thất bại") >= 0) {
+                        //trường hợp lỗi
+                        /*("#div_noft").html(response);*/
+                        //alert(response);
+                    }
+                    else {
+                        //trường hợp tìm thấy sinh viên cần sửa
+                        //alert("Lấy thông tin" + response);
+                        var nv_obj = JSON.parse(response);
+                        $("#txt_search_val").val(nv_obj.MaNV);
+                        $("#txt-id").val(nv_obj.MaNV);
+                        $("#val-idnv").val(nv_obj.MaNV);
+                        $("#val-username").val(nv_obj.HoTenNV);
+                        $("#val-email").val(nv_obj.Email);
+                        $("#val-phone").val(nv_obj.SDT);
+                        $("#val-address").val(nv_obj.Diachi);
+                        var ngaySinhFormatted = new Date(nv_obj.Ngaysinh).toISOString().split('T')[0];
+                        $("#val-birthday").val(ngaySinhFormatted);
+                        $("#val-gender").val(nv_obj.Gioitinh);
+                        $("#val-chucvu").val(nv_obj.MaCV);
+                        console.log(nv_obj);
+                    }
+                },
+                error: function (response) {
+                    alert("Xử lý lấy thông tin sinh viên cần sửa thất bại");
+                }
+            }
+        );
+        /*$("#btn_search_action").click(function () {
+
+            var search_type = $("#slc_search_type").val();
+            if (!search_type) {
+                alert("Vui lòng chọn tiêu chí tìm kiếm");
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("search_val", $("#txt_search_val").val());
+            formData.append("search_type", search_type);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    data: formData,
+                    contentType: "application/json; charset=utf-8",
+                    url: window.location.origin + '/TTNV/Search_NV',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        var rs = JSON.parse(response);
+                        if (rs.ErrCode == 1) {
+                            //trường hợp lấy dssv thành công
+                            $("#txt-id").val(rs.Data.MaNV);
+                            $("#val-idnv").val(rs.Data.MaNV);
+                            $("#val-username").val(rs.Data.HoTenNV);
+                            $("#val-email").val(rs.Data.Email);
+                            $("#val-phone").val(rs.Data.SDT);
+                            $("#val-address").val(rs.Data.Diachi);
+                            var ngaySinhFormatted = new Date(rs.Data.Ngaysinh).toISOString().split('T')[0];
+                            $("#val-birthday").val(ngaySinhFormatted);
+                            $("#val-gender").val(rs.Data.Gioitinh);
+                            $("#val-chucvu").val(rs.Data.MaCV);
+                            //console.log(rs.Data);
+                        }
+                        else {
+                            alert(rs.ErrDesc);
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response);
+                        alert("Tìm kiếm nhân viên thất bại");
+                    }
+                }
+            );
+
+        })*/
+        $("#btn_sua").click(function () {
+
+            //kỹ thuật validate input requiment phía view
+            var input_require = $(".require");
+            var is_require_all = true;
+            for (i = 0; i < input_require.length; i++) {
+                if (!$(input_require[i]).val()) {
+                    is_require_all = false;
+                }
+            }
+
+            if (is_require_all) {
+                //trường hợp không rỗng
+                var form = $('#form_data')[0];
+                var formData = new FormData(form);
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        //data: {id: $("#hosothisinh_id").html()},
+                        data: formData,
+                        //data: JSON.stringify(lst),
+                        contentType: "application/json; charset=utf-8",
+                        url: window.location.origin + '/TTNV/Edit',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (response) {
+                            alert(response);
+                            //$("#div_noft").html(response);
+                            window.location.href = '/TTNV/DanhSachNV';
+                        },
+                        error: function (response) {
+                            alert("Xử lý cập nhật thông tin sv thất bại");
+                        }
+                    }
+                );
+            }
+            else {
+                //trường hợp mssv rỗng
+                alert("Không thể chỉnh sửa! Vui lòng điền vào các trường dữ liệu bắt buộc!");
+            }
+        })
+    })
+
+    /*$("#btn_sua").click(function () {
+
+        //kỹ thuật validate input requiment phía view
+        var input_require = $(".require");
+        var is_require_all = true;
+        for (i = 0; i < input_require.length; i++) {
+            if (!$(input_require[i]).val()) {
+                is_require_all = false;
+            }
+        }
+
+        if (is_require_all) {
+            //trường hợp không rỗng
+            var form = $('#form_data')[0];
+            var formData = new FormData(form);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    //data: {id: $("#hosothisinh_id").html()},
+                    data: formData,
+                    //data: JSON.stringify(lst),
+                    contentType: "application/json; charset=utf-8",
+                    url: window.location.origin + '/TTNV/Edit',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        alert(response);
+                        //$("#div_noft").html(response);
+                        window.location.href = '/TTNV/DanhSachNV';
+                    },
+                    error: function (response) {
+                        alert("Xử lý cập nhật thông tin sv thất bại");
+                    }
+                }
+            );
+        }
+        else {
+            //trường hợp mssv rỗng
+            alert("Không thể chỉnh sửa! Vui lòng điền vào các trường dữ liệu bắt buộc!");
+        }
+    })*/
+    //Search
+
+</script>

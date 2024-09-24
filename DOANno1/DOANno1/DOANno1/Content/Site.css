@@ -1,0 +1,51 @@
+﻿/* Set padding to keep content from hitting the edges */
+/*.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+*/
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.card-body formContainer button {
+    padding: 8px;
+    cursor: pointer;
+    color: ghostwhite;
+}
+
+.formContainer button i {
+    margin-right: 4px;
+}
+
+#div_search div * {
+    float: right;
+    margin-left: 0px;
+}
+
+#div_search button {
+    width: 100%;
+    height: 100%;
+}
+
+    #div_search button i {
+        width: 100%;
+    }
+
+#div_search input {
+    border: 1px solid;
+    border-radius: 3px;
+    height: 100%;
+    padding: 3px 10px;
+}

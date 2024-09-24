@@ -1,0 +1,219 @@
+﻿@{
+    ViewBag.Title = "ql_chamcong";
+}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Chấm công nhân viên</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .day {
+            padding: 20px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+            .day.selected {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .day.disabled {
+                background-color: #eee;
+                cursor: not-allowed;
+            }
+
+        .chamCong {
+            background-color: #28a745 !important;
+            color: #fff;
+        }
+
+        .chamCongButton {
+            background-color: #007bff !important;
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .dayOfWeek {
+            font-weight: bold;
+        }
+
+        .day.currentDay {
+            background-color: #ccc;
+            color: #000;
+        }
+
+        .muted {
+            color: #ccc;
+        }
+
+        .disabled-not-marked {
+            color: #555; /* Màu xám đậm cho ngày không được chấm công */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Chấm công nhân viên</h2>
+
+        <form>
+            <!-- Trong HTML của trang Razor -->
+            <div class="form-group">
+                <label for="employeeName">Tên nhân viên:</label>
+                <input type="text" class="form-control" id="employeeName" value="@ViewBag.tenNhanVien" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="monthPicker">Chọn tháng:</label>
+                <input type="month" class="form-control" id="monthPicker">
+            </div>
+
+            <div class="calendar" id="calendar">
+                <!-- Dữ liệu lịch sẽ được hiển thị ở đây -->
+            </div>
+            <button type="button" class="btn btn-primary mt-3" onclick="chamCong(this)">Chấm công</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+    var markedDays = @Html.Raw(ViewBag.ChamCongList);
+
+
+function chamCong() {
+    var currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
+  // Sửa lại đây để lấy ngày hiện tại
+    var currentDateString = currentDate.toISOString().split('T')[0];
+    console.log('Current Date String:', currentDateString);
+    console.log('Marked Days:', markedDays);
+
+    var dayElement = document.querySelector('[data-date="' + currentDateString + '"]');
+
+    if (dayElement) {
+        console.log('Chấm công cho ngày: ', currentDateString);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ChamCong/LuuChamCong',
+            data: { maNhanVien: '@Session["MaNV"]', thoiGianCC: currentDateString },
+            success: function (response) {
+                if (response.LuuThanhCong) {
+                    alert('Chấm công thành công!');
+                    dayElement.classList.add('chamCong');
+                } else {
+                    alert('Lỗi khi chấm công: ' + response.Loi);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi gửi yêu cầu chấm công.');
+            }
+        });
+    } else {
+        alert('Ngày hôm nay không có trong lịch chấm công.');
+    }
+}
+    function createDayElement(date, type, isMarked, isMuted, isDisabledNotMarked) {
+        var dayElement = document.createElement('div');
+        dayElement.classList.add('day');
+        dayElement.textContent = new Date(date).getDate();
+        dayElement.setAttribute('data-date', date);
+
+        if (type === 'chamCong' && isMarked) {
+            dayElement.classList.add('chamCongButton');
+        } else if (type === 'disabled') {
+            dayElement.classList.add('disabled');
+            if (!isMarked && isDisabledNotMarked) {
+                dayElement.classList.add('disabled-not-marked');
+            }
+        }
+
+        if (isMuted) {
+            dayElement.classList.add('muted');
+        }
+
+        return dayElement;
+    }
+
+    function renderCalendar(year, month) {
+        var calendarElement = document.getElementById('calendar');
+        calendarElement.innerHTML = '';
+
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Xác định ngày đầu tiên của tháng
+        const firstDayOfMonth = new Date(year, month, 1);
+
+        // Xác định ngày cuối cùng của tháng
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+
+        const firstDayOfWeek = new Date(year, month, 1).getDay();
+        const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+        for (let i = 0; i < 7; i++) {
+            const dayOfWeekElement = document.createElement('div');
+            dayOfWeekElement.classList.add('day', 'dayOfWeek');
+            dayOfWeekElement.textContent = daysOfWeek[i];
+            calendarElement.appendChild(dayOfWeekElement);
+        }
+
+        for (let i = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; i > 0; i--) {
+            const prevMonthDate = new Date(year, month, 1 - i).toISOString().split('T')[0];
+            const dayElement = createDayElement(prevMonthDate, 'disabled', false, true, false);
+            calendarElement.appendChild(dayElement);
+        }
+        for (let i = 1; i <= daysInMonth; i++) {
+            const currentMonthDay = new Date(year, month, i).toISOString().split('T')[0];
+            const isMarkedDay = markedDays.some(date => date.substring(0, 10) === currentMonthDay);
+            const dayElement = createDayElement(currentMonthDay, 'chamCong', isMarkedDay, false, !isMarkedDay);
+
+            const today = new Date();
+            if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === i) {
+                dayElement.classList.add('currentDay');
+            }
+
+            calendarElement.appendChild(dayElement);
+        }
+
+        // Lặp để thêm các ngày của tháng sau cho đến khi đạt đến ngày cuối cùng của tuần
+        const remainingDays = 6 - lastDayOfMonth.getDay(); // Số ngày còn lại để đạt đến cuối tuần
+        for (let i = 1; i <= remainingDays; i++) {
+            const nextMonthDateObj = new Date(year, month + 1, i);
+            const nextMonthDateString = nextMonthDateObj.toISOString().split('T')[0];
+
+            const dayElement = createDayElement(nextMonthDateString, 'disabled', false, true, false);
+            calendarElement.appendChild(dayElement);
+        }
+
+        console.log(markedDays);
+     // Log giá trị của markedDays
+    }
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const monthPicker = document.getElementById('monthPicker');
+    monthPicker.value = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    monthPicker.addEventListener('change', function () {
+        const [year, month] = this.value.split('-');
+        renderCalendar(year, month - 1);
+    });
+
+    renderCalendar(currentYear, currentMonth);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+﻿@{
+    ViewBag.Title = "QuanLyChamCong";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quản lí chấm công</title>
+    <style>
+        .scrollable-table {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .sticky-column {
+            position: sticky;
+            left: 0;
+            background-color: #f2f2f2;
+        }
+
+        .sunday {
+            background-color: #dddddd; /* Light grey for Sundays */
+        }
+
+        .employee-column {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background-color: #f2f2f2;
+        }
+
+        .chamcong {
+            background-color: #4CAF50; /* Green color for attendance */
+            color: white; /* White text on green background */
+        }
+    </style>
+</head>
+<body>
+    <div class="scrollable-table">
+        <label for="monthYearPicker">Chọn tháng và năm:</label>
+        <input type="month" id="monthYearPicker" onchange="changeMonthYear()">
+
+        <table>
+            <thead>
+
+            </thead>
+            <tbody id="employeeTableBody">
+                <!-- Employee rows will be dynamically added here in the JavaScript section -->
+            </tbody>
+
+            <tbody id="employeeTableBody">
+                @foreach (var employee in ViewBag.NhanVienList)
+                {
+                    <tr>
+                        <td>@employee.HoTenNV</td>
+                        <td>@employee.MaNV</td>
+                        <td> </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <script>
+
+        var employeeTableBody = document.getElementById('employeeTableBody');
+        var monthYearPicker = document.getElementById('monthYearPicker');
+
+        function changeMonthYear() {
+            var selectedMonthYear = monthYearPicker.value;
+
+            if (selectedMonthYear === "") {
+                alert('Vui lòng chọn tháng và năm!');
+                return;
+            }
+
+            var selectedDate = new Date(selectedMonthYear);
+            var selectedMonth = selectedDate.getMonth() + 1;
+            var selectedYear = selectedDate.getFullYear();
+
+            var currentDate = new Date();
+            var currentMonth = currentDate.getMonth() + 1;
+            var currentYear = currentDate.getFullYear();
+
+            if (selectedMonth < 1 || selectedMonth > 12 || selectedYear < 1000 || selectedYear > 9999) {
+                alert('Vui lòng chọn tháng và năm hợp lệ!');
+                return;
+            }
+
+            var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+
+            // Clear existing content
+            employeeTableBody.innerHTML = '';
+
+
+            // Add header row
+            var headerRow = document.createElement('tr');
+            var nameHeader = document.createElement('th');
+            var idHeader = document.createElement('th');
+
+            nameHeader.textContent = 'Nhân viên';
+            idHeader.textContent = 'Mã nhân viên';
+
+
+
+
+
+            headerRow.appendChild(nameHeader);
+            headerRow.appendChild(idHeader);
+
+            for (var i = 1; i <= daysInMonth; i++) {
+                var date = new Date(selectedYear, selectedMonth - 1, i);
+                var dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+                var dayCell = document.createElement('th');
+                dayCell.textContent = i + ' (' + getShortDayName(dayOfWeek) + ')';
+                if (dayOfWeek === 0) {
+                    dayCell.classList.add('sunday'); // Apply style for Sundays
+                }
+
+                headerRow.appendChild(dayCell);
+            }
+
+            employeeTableBody.appendChild(headerRow);
+
+        }
+
+        function addEmployeeRow(employeeName, employeeID, daysInMonth) {
+            console.log(chamCongList);
+            var row = document.createElement('tr');
+            var nameCell = document.createElement('td');
+            var idCell = document.createElement('td');
+
+            nameCell.textContent = employeeName;
+            idCell.textContent = employeeID;
+
+            row.appendChild(nameCell);
+            row.appendChild(idCell);
+
+            for (var i = 1; i <= daysInMonth; i++) {
+                var date = new Date(monthYearPicker.value + '-' + ('0' + i).slice(-2));
+                var dayOfWeek = date.getDay();
+
+                var dayCell = document.createElement('td');
+                // Add more logic here if needed
+                dayCell.textContent = ''; // Add your content here
+                if (dayOfWeek === 0) {
+                    dayCell.classList.add('sunday'); // Apply style for Sundays
+                }
+
+                row.appendChild(dayCell);
+            }
+
+            employeeTableBody.appendChild(row);
+        }
+
+        function getShortDayName(dayIndex) {
+            var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return days[dayIndex];
+        }
+
+        var currentDate = new Date();
+        var currentMonth = currentDate.getMonth() + 1;
+        var currentYear = currentDate.getFullYear();
+        monthYearPicker.value = currentYear + '-' + ('0' + currentMonth).slice(-2);
+        changeMonthYear();
+        function addEmployeeRow(employeeName, employeeID, daysInMonth, chamCongList) {
+            var row = document.createElement('tr');
+            var nameCell = document.createElement('td');
+            var idCell = document.createElement('td');
+
+            nameCell.textContent = employeeName;
+            idCell.textContent = employeeID;
+
+            row.appendChild(nameCell);
+            row.appendChild(idCell);
+
+            for (var i = 1; i <= daysInMonth; i++) {
+                var date = new Date(monthYearPicker.value + '-' + ('0' + i).slice(-2));
+                var dayOfWeek = date.getDay();
+
+                var dayCell = document.createElement('td');
+                // Add more logic here if needed
+                dayCell.textContent = ''; // Add your content here
+                if (dayOfWeek === 0) {
+                    dayCell.classList.add('sunday'); // Apply style for Sundays
+                }
+
+                // Check if the current date is in the chamCongList
+                var formattedDate = formatDate(date);
+                if (chamCongList.includes(formattedDate)) {
+                    dayCell.classList.add('chamcong'); // Apply style for days with attendance
+                }
+
+                row.appendChild(dayCell);
+            }
+
+            employeeTableBody.appendChild(row);
+        }
+
+        function formatDate(date) {
+            var dd = date.getDate();
+            var mm = date.getMonth() + 1; // January is 0!
+            var yyyy = date.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            return yyyy + '-' + mm + '-' + dd;
+        }
+
+    </script>
+</body>
+</html>

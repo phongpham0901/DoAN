@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quản lý nhân viên</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../Content/images/favicon.png">
+    <link rel="stylesheet" href="../Content/vendor/owl-carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../Content/vendor/owl-carousel/css/owl.theme.default.min.css">
+    <link href="../Content/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+    <link href="../Content/css/style.css" rel="stylesheet">
+
+    <!--flot-chart js-->
+    @*<script src="../Content/vendor/flot/jquery.flot.js"></script>
+    <script src="../Content/vendor/flot/jquery.flot.resize.js"></script>*@
+
+    @*<script src="../Content/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+    <script src="../Content/vendor/jqvmap/js/jquery.vmap.usa.js"></script>*@
+    @*<script src="../Content/vendor/jquery.counterup/jquery.counterup.min.js"></script>*@
+
+    <!--Required vendors-->
+    <script src="../Content/vendor/global/global.min.js"></script>
+    @*<script src="../Scripts/js/quixnav-init.js"></script>
+    <script src="../Scripts/js/custom.min.js"></script>*@
+
+    <link rel="stylesheet" href="../Content/Site.css" />
+
+
+</head>
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <a href="/Home/Index" class="brand-logo">
+                <img class="logo-abbr" src="../Content/images/logo.png" alt="">
+                <img class="logo-compact" src="../Content/images/logo-text.png" alt="">
+                <img class="brand-title" src="../Content/images/logo-text.png" alt="">
+            </a>
+
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content">
+                <nav class="navbar navbar-expand">
+                    <div class="collapse navbar-collapse justify-content-between">
+                        <div class="navbar-nav header-right">
+                            <div class="nav-item dropdown header-profile">
+                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                                    <i class="mdi mdi-account"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="javascript:void(0);" onclick="return logoutConfirmation();" class="dropdown-item">
+                                        <i class="icon-key"></i>
+                                        <span class="ml-2">Logout</span>
+                                    </a>
+
+                                    <script>
+                                        function logoutConfirmation() {
+                                            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                                                 window.location.href = '@Url.Action("Logout", "TaiKhoan")';
+                                            }
+                                            return false;
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="quixnav">
+            <div class="quixnav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a class="nav-label first" href="@Url.Action("Index", "Home")" aria-expanded="false">
+                            <i class="icon icon-single-04"></i><span class="nav-text">Trang chủ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @*class="has-arrow"*@ href="@Url.Action("DSTK", "QLTK")" aria-expanded="false">
+                            <i class="icon icon-app-store"></i><span class="nav-text">Quản lý tài khoản</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-chart-bar-33"></i><span class="nav-text">Quản lý thông tin nhân viên</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            @*<li><a href="../QLNV/DSNV">Danh Sách</a></li>
+                               <li><a href="../QLNV/ThemNV">Thêm</a></li>*@
+                            <li><a href="../TTNV/DanhSachNV">Danh Sách</a></li>
+                            <li><a href="../TTNV/AddNV">Thêm</a></li>
+                            @*<li><a href="../TTNV/EditNV">Edit</a></li>*@
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-world-2"></i><span class="nav-text">Quản lý chức vụ</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="~/QLCV/DanhSach">Danh Sách chức vụ</a></li>
+                            <li><a href="~/QLCV/SuaCV">Sửa/Xóa</a></li>
+                            <li><a href="~/QLCV/ThemCV">Thêm</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-plug"></i><span class="nav-text">Quản lý lương</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li>Lương nhân viên</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-world-2"></i><span class="nav-text">Quản lý chấm công</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="~/ChamCong/ql_chamcong">Chấm Công</a></li>
+                            <li><a href="~/ChamCong/QuanLyChamCong">Quản Lý Chấm Công</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            @RenderBody()
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <!--**********************************
+            Footer end
+        ***********************************-->
+        <!--**********************************
+           Support ticket button start
+        ***********************************-->
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!--Required vendors-->
+    @*<script src="../Content/vendor/global/global.min.js"></script>*@
+    <script src="../Scripts/js/quixnav-init.js"></script>
+    <script src="../Scripts/js/custom.min.js"></script>
+    <!--Vectormap-->
+    <script src="../Content/vendor/raphael/raphael.min.js"></script>
+    <script src="../Content/vendor/morris/morris.min.js"></script>
+
+
+    <script src="../Content/vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="../Content/vendor/chart.js/Chart.bundle.min.js"></script>
+    <script src="../Content/vendor/gaugeJS/dist/gauge.min.js"></script>
+    <!--flot-chart js-->
+    <!--<script src="../Content/vendor/flot/jquery.flot.js"></script>
+    <script src="../Content/vendor/flot/jquery.flot.resize.js"></script>-->
+    <!--Owl Carousel-->
+    <script src="../Content/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+    <!--Counter Up-->
+    @*<script src="../Content/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+        <script src="../Content/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+        <script src="../Content/vendor/jquery.counterup/jquery.counterup.min.js"></script>*@
+    @*<script src="../Scripts/js/dashboard/dashboard-1.js"></script>
+        <script src="../Scripts/js/dashboard/dashboard-1.js"></script>*@
+    @RenderSection("scripts", false)
+</body>
+</html>

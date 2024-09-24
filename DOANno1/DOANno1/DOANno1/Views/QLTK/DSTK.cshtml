@@ -1,0 +1,270 @@
+﻿
+@{
+    ViewBag.Title = "DSTK";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Quản lý danh sách tài khoản</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="#">Tran</a></li>*@
+                    @*<li class="breadcrumb-item active">Trang chủ</li>*@
+                    <li class="breadcrumb-item"><a href="~/QLTK/DSTK">Quản lý tài khoản</a></li>
+                    @*<li class="breadcrumb-item active">Danh sách tài khoản</li>*@
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div id="div_test"> </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách tài khoản</h3>
+                        <div id="div_search" class="row">
+                            <div><a href="../QLTK/ThemTK" id="btn_them_action" class="btn btn-primary"></>Thêm</a></div>
+                            @*<div class="col-sm-2 col-md-1 right"><a href="../QLTK/SuaTK" id="btn_sua_action" class="btn btn-primary">Sửa</a></div>*@
+                            @*<div class="col-sm-2 col-md-1 right"><a href="../QLTK/XoaTK" id="btn_xoa_action" class="btn btn-primary">Xóa</a></div>*@
+                            <div class="col-sm-4 col-md-5 right">
+                                <input name="txt_search_val" id="txt_search_val" class="form-control" type="text" placeholder="Nhập giá trị tìm kiếm" />
+                            </div>
+                            <div class="col-sm-4 col-md-2">
+                                <select id="slc_search_type" class="form-control">
+                                    <option value="">Chọn tiêu chí tìm kiếm</option>
+                                    <option value="TenTK">Mã tài khoản</option>
+                                    <option value="User">Tên đăng nhập</option>
+                                    <option value="QuyenTC">Quyền truy cập</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-md-1 right"><button id="btn_search_action" class="btn btn-primary"><i class="fa fa-search"></i></button></div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+
+                        <div>
+                            <table class=" table table-bordered table-border-grey">
+                                <thead>
+                                    <tr class="bg-primary ">
+                                        <th style="width: 10px">#</th>
+                                        <th>Mã tài khoản</th>
+                                        <th>Tên đăng nhập</th>
+                                        @*<th>Mật khẩu</th>*@
+                                        <th>Quyền truy cập</th>
+                                        @*<th>Mã nhân viên</th>*@
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl_data">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    @*<div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>*@
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+<script>
+    //Hiện danh sách tài khoản
+    $(document).ready(function () {
+        function loadData() {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: window.location.origin + '/QLTK/get_All',
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (response) {
+                    var rs = JSON.parse(response);
+
+                    if (rs.ErrCode == 1) {
+                        var str = "";
+                        for (var i = 0; i < rs.Data.length; i++) {
+                            str += "<tr> <td class='tenTK btn-edit' data-id='" + rs.Data[i].TenTK + "'>" +
+                                "<td class='tenTK btn-delete' data-id='" + rs.Data[i].TenTK + "'>" +
+                                //(i + 1) + "</td> <td> " +
+                                rs.Data[i].TenTK + " </td><td>" +
+                                rs.Data[i].User + " </td><td>" +
+                                /*rs.Data[i].Password + " </td><td>" +*/
+                                rs.Data[i].QuyenTC + " </td><td>" +
+                                /*rs.Data[i].MaNV + "</td><td>" +*/
+                                "<button class='btn btn-edit btn-warning' data-id='" + rs.Data[i].TenTK + "'>Sửa</button>" +
+                                "<button class='btn btn-delete btn-danger' type='button' onclick='Delete_obj(\"" + rs.Data[i].TenTK + "\")' class='btn btn-outline-danger border-0'>Xóa</button></td></tr>";
+
+                        }
+
+                        $("#tbl_data").html(str);
+
+                    } else {
+                        alert(rs.ErrDesc);
+                    }
+                },
+                error: function (response) {
+                    alert("Lấy DSTK thất bại");
+                }
+            });
+        }
+
+        // Load data on page load
+        loadData();
+
+        // Edit button click event handler
+        $(document).on("click", ".btn-edit", function () {
+            // Get the selected row's data
+            var tenTK = $(this).data("id");
+
+            // Perform the edit action based on the selected data
+            // You can redirect to the edit page or show a modal, etc.
+            // Example: Redirect to the edit page with the selected TenTK
+            window.location.href = window.location.origin + '/QLTK/SuaTK?tenTK=' + tenTK;
+        });
+        // Gắn một trình xử lý sự kiện click cho tài liệu, chọn các phần tử có lớp "btn-delete"
+        //$(document).on("click", ".btn-delete", function () {
+        //    // Lấy giá trị của thuộc tính "data-id" từ nút đã được nhấp
+        //    var tenTK = $(this).data("id");
+
+        //    // Tạo một đối tượng JSON với dữ liệu cần gửi
+        //    var requestData = {
+        //        tenTK: tenTK
+        //    };
+
+        //    // Xác nhận với người dùng trước khi tiến hành hành động xóa
+        //    var confirmDelete = confirm("Bạn có chắc chắn muốn xóa tài khoản " + tenTK);
+
+        //    if (confirmDelete) {
+        //        // Thực hiện hành động xóa dựa trên dữ liệu đã chọn
+        //        // Ví dụ: thực hiện một cuộc gọi AJAX để xóa bản ghi trên máy chủ
+
+        //            $.ajax(
+        //                {
+        //                    type: "POST",
+        //                    data: JSON.stringify(requestData), // Chuyển đối tượng JSON như dữ liệu
+        //                    contentType: "application/json; charset=utf-8",
+        //                    url: window.location.origin + '/QLTK/Del_TK',
+        //                    processData: false,
+        //                    contentType: false,
+        //                    cache: false,
+        //                    success: function (response) {
+        //                        var rs = JSON.parse(response);
+        //                        alert(rs.ErrDesc);
+        //                        //refresh lại trang web để thấy thay đổi;
+        //                        window.location.href = "/QLTK/DSTK";
+        //                    },
+        //                    error: function (response) {
+        //                        alert("Xóa sinh viên thất bại");
+        //                    }
+        //        });
+        //    }
+        //});
+    });
+    $("#btn_search_action").click(function () {
+        //alert($("#txt_search_val").val());
+        var search_type = $("#slc_search_type").val();
+        //if (!search_type) {
+        //    alert("Vui lòng chọn tiêu chí tìm kiếm");
+        //    return false;
+        //}
+
+        var formData = new FormData();
+        formData.append("search_val", $("#txt_search_val").val());
+        formData.append("search_type", search_type);
+
+        $.ajax(
+            {
+                type: "POST",
+                data: formData,
+                contentType: "application/json; charset=utf-8",
+                url: window.location.origin + '/QLTK/Search_TK',
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (response) {
+                    var rs = JSON.parse(response);
+
+                    if (rs.ErrCode == 1) {
+                        //trường hợp lấy dssv thành công
+                        //console.log(rs.Data);
+                        var str = "";
+                        for (var i = 0; i < rs.Data.length; i++) {
+                            str += "<tr> <td class='tenTK btn-edit' data-id='" + rs.Data[i].TenTK + "'>" +
+                                "<td class='tenTK btn-delete' data-id='" + rs.Data[i].TenTK + "'>" +
+                                //(i + 1) + "</td> <td> " +
+                                rs.Data[i].TenTK + " </td><td>" +
+                                rs.Data[i].User + " </td><td>" +
+                                /* rs.Data[i].Password + " </td><td>" +*/
+                                rs.Data[i].QuyenTC + " </td><td>" +
+                                /*rs.Data[i].MaNV + "</td><td>" +*/
+                                "<button class='btn btn-edit btn-warning' data-id='" + rs.Data[i].TenTK + "'>Sửa</button>" +
+                                "<button class='btn btn-delete btn-danger' data-id='" + rs.Data[i].TenTK + "'>Xóa</button>" +
+                                "</td></tr>";
+                        }
+                        $("#tbl_data").html(str);
+                    }
+                    else {
+                        alert(rs.ErrDesc);
+                    }
+                },
+                error: function (response) {
+                    alert("Tìm kiếm thất bại");
+                }
+            }
+        );
+    })
+    function Delete_obj(tenTK) {
+        if (confirm("Bạn có thực sự muốn xóa bản ghi có id=" + tenTK + " này không?")) {
+            //xử lý xóa
+            /*alert("Đồng ý xóa");*/
+
+            //trường hợp không rỗng
+            var formData = new FormData();
+            formData.append("tenTK", tenTK);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    data: formData,
+                    contentType: "application/json; charset=utf-8",
+                    url: window.location.origin + '/QLTK/Del_TK',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        var rs = JSON.parse(response);
+                        alert(rs.ErrDesc);
+                        //refresh lại trang web để thấy thay đổi;
+                        window.location.href = "/QLTK/DSTK";
+                    },
+                    error: function (response) {
+                        alert("Xóa sinh viên thất bại");
+                    }
+                }
+            );
+        }
+    };
+</script>

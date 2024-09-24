@@ -1,0 +1,234 @@
+﻿
+@{
+    ViewBag.Title = "DanhSachNV";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Quản lý thông tin nhân viên</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    @*<li class="breadcrumb-item"><a href="#">Tran</a></li>*@
+                    @*<li class="breadcrumb-item active">Trang chủ</li>*@
+                    <li class="breadcrumb-item"><a href="#">Quản lý thông tin nhân viên</a></li>
+                    <li class="breadcrumb-item active">Danh sách nhân viên</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<!-- Add this code above the table -->
+
+<section class="content">
+    <div class="container-fluid">
+        <div id="div_test"> </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách nhân viên</h3>
+                    </div>
+                    <div id="div_search" class="row">
+                        <div class="col-sm-2 col-md-3 right">
+                        </div>
+                        <div class="col-sm-4 col-md-5 right">
+                            <input name="txt_search_val" id="txt_search_val" class="form-control" type="text" placeholder="Nhập giá trị tìm kiếm" />
+                        </div>
+                        <div class="col-sm-4 col-md-3">
+                            <select id="slc_search_type" class="form-control">
+                                <option value="">Chọn tiêu chí tìm kiếm</option>
+                                <option value="mssv">MaNV</option>
+                                <option value="hoten">Họ tên</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 col-md-1 right"><button id="btn_search_action" class="btn btn-primary"><i class="fa fa-search"></i></button></div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-border-grey">
+                            <thead>
+                                <tr class="bg-primary ">
+                                    <th>MSNV</th>
+                                    <th>Họ tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Giới tính</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Email</th>
+                                    <th>Chức vụ</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_data">
+                                <!-- Content will be dynamically populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    @*<div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+            </ul>
+        </div>*@
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+
+<script>
+    function Delete_obj(manv) {
+        if (confirm("Xóa nhân viên có id = " + manv + " ?")) {
+            //xử lý xóa
+            /*alert("Đồng ý xóa");*/
+
+            //trường hợp không rỗng
+            var formData = new FormData();
+            formData.append("manv", manv);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    data: formData,
+                    contentType: "application/json; charset=utf-8",
+                    url: window.location.origin + '/TTNV/Del_NV',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        var rs = JSON.parse(response);
+                        alert(rs.ErrDesc);
+                        //refresh lại trang web để thấy thay đổi;
+                        window.location.href = "/TTNV/DanhSachNV";
+                    },
+                    error: function (response) {
+                        alert("Xóa nhân viên thất bại");
+                    }
+                }
+            );
+        }
+    };
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: window.location.origin + '/TTNV/get_All',
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                try {
+                    var rs = response;
+
+                    if (rs.ErrCode == 1 && rs.Data && Array.isArray(rs.Data)) {
+                        console.log(rs.Data);
+
+                        var str = "";
+                        for (var i = 0; i < rs.Data.length; i++) {
+                            str += "<tr> <td class='manv btn-edit manv btn-delete' data-id='" + rs.Data[i].MaNV + "'>" 
+                                /*" class='manv btn-delete' data-id='" + rs.Data[i].MaNV + "'>"*/
+                                + rs.Data[i].MaNV + " </td> <td> "
+                                + rs.Data[i].HoTenNV + "</td> <td> "
+                                + rs.Data[i].Ngaysinh + "</td> <td> "
+                                + rs.Data[i].Gioitinh + "</td> <td> "
+                                + rs.Data[i].Diachi + "</td> <td> "
+                                + rs.Data[i].SDT + "</td> <td> "
+                                + rs.Data[i].Email + "</td> <td> "
+                                + rs.Data[i].ChucVu + "</td> <td> "
+                                + "<button class='btn btn-edit btn-warning' data-id='" + rs.Data[i].MaNV + "'>Sửa</button>" +
+                                "<button class='btn btn-delete btn-danger' type='button' onclick='Delete_obj(\"" + rs.Data[i].MaNV + "\")' class='btn btn-outline-danger border-0'>Xóa</button></td></tr>";
+
+                        }
+
+                        $("#tbl_data").html(str);
+                    } else {
+                        console.log(rs.ErrDesc);
+                        alert("Data structure is not as expected");
+                    }
+                } catch (error) {
+                    console.log(error);
+                    alert("Error parsing response data");
+                }
+            },
+            error: function (response) {
+                console.log(response);
+                alert("Lấy DSNV thất bại");
+            }
+        });
+        $(document).on("click", ".btn-edit", function () {
+            // Get the selected row's data
+            var manv = $(this).data("id");
+            // Perform the edit action based on the selected data
+            // You can redirect to the edit page or show a modal, etc.
+            // Example: Redirect to the edit page with the selected TenTK
+            window.location.href = window.location.origin + '/TTNV/EditNV?manv=' + manv;
+        });
+        $("#btn_search_action").click(function () {
+            //alert($("#txt_search_val").val());
+            var search_type = $("#slc_search_type").val();
+            if (!search_type) {
+                alert("Vui lòng chọn tiêu chí tìm kiếm");
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("search_val", $("#txt_search_val").val());
+            formData.append("search_type", search_type);
+
+            $.ajax(
+                {
+                    type: "POST",
+                    data: formData,
+                    contentType: "application/json; charset=utf-8",
+                    url: window.location.origin + '/TTNV/Search_DSNV',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        var rs = JSON.parse(response);
+
+                        if (rs.ErrCode == 1) {
+                            //trường hợp lấy dssv thành công
+                            //console.log(rs.Data);
+                            var str = "";
+                            for (var i = 0; i < rs.Data.length; i++) {
+                                str += "<tr> <td> "
+                                    + rs.Data[i].MaNV + " </td> <td> "
+                                    + rs.Data[i].HoTenNV + "</td> <td> "
+                                    + rs.Data[i].Ngaysinh + "</td> <td> "
+                                    + rs.Data[i].Gioitinh + "</td> <td> "
+                                    + rs.Data[i].Diachi + "</td> <td> "
+                                    + rs.Data[i].SDT + "</td> <td> "
+                                    + rs.Data[i].Email + "</td> <td> "
+                                    + rs.Data[i].ChucVu +
+                                    "</td> <td><a href='./EditNV?manv=" + rs.Data[i].MaNV + "' class='btn btn-outline-warning border-0'><i class='fa fa-pen'></i></a> <button type='button' onclick='Delete_obj(" + rs.Data[i].MaNV + ")' class='btn btn-outline-danger border-0'><i class='fa fa-trash'></i></button> </td> </tr>";
+                           }
+                            $("#tbl_data").html(str);
+                        }
+                        else {
+                            alert(rs.ErrDesc);
+                        }
+                    },
+                    error: function (response) {
+                        alert("Tìm kiếm thất bại!");
+                    }
+                }
+            );
+        })
+    });
+</script>

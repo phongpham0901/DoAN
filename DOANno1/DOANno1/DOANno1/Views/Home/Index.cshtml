@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <select id="select" class="form-control" style="width: 150px;">
+        </select>
+        <div>
+            <canvas style="height:150px;" id="employeeAttendanceChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        var ctx = document.getElementById('employeeAttendanceChart');
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetYears", "Chart")',
+                type: 'GET',
+                success: function (data) {
+                    var select = $('#select');
+                    select.empty();
+                    select.append('<option value="0">Select Year</option>');
+                    $.each(data, function (index, item) {
+                        select.append($('<option></option>').val(item).html(item));
+                    });
+                }
+            });
+
+            $('#select').change(function () {
+                var selectedYear = $(this).val(); // Lấy giá trị năm từ thẻ select khi có sự kiện change
+
+                $.ajax({
+                    url: '@Url.Action("GetAttendanceData", "Chart")',
+                    type: 'GET',
+                    data: { year: selectedYear }, // Sử dụng giá trị năm đã chọn
+                    success: function (data) {
+                        var months = [];
+                        var counts = [];
+
+                        data.forEach(function(item) {
+                            months.push(item.ThangCC);
+                            counts.push(item.SoLuongNhanVien);
+                        });
+
+                        var barChartData = {
+                            labels: months,
+                            datasets: [{
+                                label: 'Số lượng nhân viên',
+                                backgroundColor: 'green',
+                                borderWidth: 1,
+                                data: counts
+                            }]
+                        };
+
+                        var myBarChart = new Chart(ctx, {
+                            type: "bar",
+                            data: barChartData,
+                            options: {
+                                scales: {
+                                    y: {
+                                        ticks: {
+                                            beginAtZero: false,
+                                            suggestedMin: 1
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+}
